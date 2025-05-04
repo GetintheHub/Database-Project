@@ -7,14 +7,14 @@ public class UI {
     public static void main(String[] args) {
         // JFrame
         JFrame frame = new JFrame("Multimedia Center Database");
-        frame.setSize(400, 200);  
+        frame.setSize(400, 200);  // Larger window to allow space for navigation
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); 
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
 
-       
+        
         frame.setLayout(new BorderLayout());
 
-        //Login
+        // Login
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new BorderLayout());
         JLabel welcomeLabel = new JLabel("Multimedia Center Database", SwingConstants.CENTER);
@@ -24,11 +24,11 @@ public class UI {
         welcomeLabel.setForeground(Color.WHITE);
         loginPanel.add(welcomeLabel, BorderLayout.NORTH);
 
-        
+        // Username and Password fields
         JPanel formPanel = new JPanel();
-        formPanel.setLayout(new GridLayout(3, 2, 10, 10)); 
+        formPanel.setLayout(new GridLayout(3, 2, 10, 10));
 
-      
+        // Smaller font for labels and fields
         Font smallFont = new Font("Arial", Font.PLAIN, 12);
 
         JLabel usernameLabel = new JLabel("Username:");
@@ -41,13 +41,14 @@ public class UI {
         JPasswordField passwordField = new JPasswordField(12);  
         passwordField.setFont(smallFont);
 
+        
         JButton submitButton = new JButton("Login");
-        submitButton.setPreferredSize(new Dimension(100, 35));  
+        submitButton.setPreferredSize(new Dimension(100, 35));  //
         submitButton.setBackground(new Color(0, 123, 255)); 
-        submitButton.setForeground(Color.WHITE); 
+        submitButton.setForeground(Color.WHITE);  
         submitButton.setFont(smallFont);  
 
-       
+        //Frame Additions 
         formPanel.add(usernameLabel);
         formPanel.add(usernameField);
         formPanel.add(passwordLabel);
@@ -63,13 +64,19 @@ public class UI {
                 String usernameInput = usernameField.getText();
                 String passwordInput = new String(passwordField.getPassword());
 
-                JOptionPane.showMessageDialog(frame, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                frame.getContentPane().removeAll(); 
-                MainDashboard.showDashboard(frame); 
+                // Validate login credentials with placeholder for database
+                if (DatabaseHelper.validateUser(usernameInput, passwordInput)) {
+                    JOptionPane.showMessageDialog(frame, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    // Transition to the main dashboard after login
+                    frame.getContentPane().removeAll(); 
+                    MainDashboard.showDashboard(frame); 
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Invalid Username or Password.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
         frame.add(loginPanel, BorderLayout.CENTER);
-        frame.setVisible(true);
+        frame.setVisible(true); 
     }
 }

@@ -6,30 +6,45 @@ import java.awt.event.ActionListener;
 public class MainDashboard {
 
     public static void showDashboard(JFrame frame) {
-        //Main Dashboard
+        //Dashboard Setup
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Center the frame on the screen
+        frame.setLocationRelativeTo(null); 
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        //Top Navigation Bar Setup
+        JPanel topNavPanel = new JPanel();
+        topNavPanel.setLayout(new FlowLayout(FlowLayout.LEFT));  
+        topNavPanel.setBackground(new Color(50, 50, 50));  
+        topNavPanel.setPreferredSize(new Dimension(800, 60));
 
-        //Create the panels for each section
-        JPanel addRentalPanel = createAddRentalPanel();
-        JPanel viewRentalsPanel = createViewRentalsPanel();
-        JPanel manageUsersPanel = createManageUsersPanel();
+    
+        JButton addRentalButton = new JButton("Add Rental");
+        JButton manageUsersButton = new JButton("Manage Users");
+        JButton viewRentalButton = new JButton("View Rentals");
+        JButton viewAvailableButton = new JButton("Available Rentals");
 
-        tabbedPane.addTab("Add Rental", addRentalPanel);
-        tabbedPane.addTab("View Rentals", viewRentalsPanel);
-        tabbedPane.addTab("Manage Users", manageUsersPanel);
 
-        frame.add(tabbedPane);
 
-        frame.setVisible(true);
-    }
 
-    private static JPanel createAddRentalPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 2, 10, 10));
+        setButtonStyle(addRentalButton);
+        setButtonStyle(manageUsersButton);
+        setButtonStyle(viewRentalButton);
+        setButtonStyle(viewAvailableButton);
+
+        
+        topNavPanel.add(viewAvailableButton);
+        topNavPanel.add(addRentalButton);
+        topNavPanel.add(manageUsersButton);
+        topNavPanel.add(viewRentalButton);
+
+        JPanel mainContentPanel = new JPanel();
+        mainContentPanel.setLayout(new CardLayout());  
+        
+        
+
+        // Rental Page
+        JPanel addRentalPanel = new JPanel();
+        addRentalPanel.setLayout(new GridLayout(5, 2, 10, 10)); 
 
         JLabel itemNameLabel = new JLabel("Item Name:");
         JTextField itemNameField = new JTextField(20);
@@ -39,68 +54,143 @@ public class MainDashboard {
 
         JLabel endDateLabel = new JLabel("Rental End Date:");
         JTextField endDateField = new JTextField(20);
+        
+        JLabel renterIdLabel = new JLabel("Renter ID:");
+        JTextField renterIdField = new JTextField(20);
+        
+        
+ 
+        addRentalPanel.add(renterIdLabel);
+        addRentalPanel.add(renterIdField);
 
-        JButton submitButton = new JButton("Submit Rental");
-        submitButton.setBackground(new Color(0, 123, 255)); 
-        submitButton.setForeground(Color.WHITE); 
+        
 
-        panel.add(itemNameLabel);
-        panel.add(itemNameField);
-        panel.add(startDateLabel);
-        panel.add(startDateField);
-        panel.add(endDateLabel);
-        panel.add(endDateField);
-        panel.add(submitButton);
+        JButton submitRentalButton = new JButton("Submit Rental");
+        submitRentalButton.setBackground(new Color(0, 123, 255)); 
+        submitRentalButton.setForeground(Color.WHITE); 
+        
+        
+        
+        
+        addRentalPanel.add(itemNameLabel);
+        addRentalPanel.add(itemNameField);
+        addRentalPanel.add(startDateLabel);
+        addRentalPanel.add(startDateField);
+        addRentalPanel.add(endDateLabel);
+        addRentalPanel.add(endDateField);
+        addRentalPanel.add(renterIdLabel);
+        addRentalPanel.add(renterIdField);
+        addRentalPanel.add(submitRentalButton);
+        addRentalPanel.add(submitRentalButton);
 
-        //ActionListener for Submit Rental Button
-        submitButton.addActionListener(e -> {
+        // ActionListener for Submit Rental
+        submitRentalButton.addActionListener(e -> {
+            // Get the input values from the form
             String itemName = itemNameField.getText();
             String startDate = startDateField.getText();
             String endDate = endDateField.getText();
+            String renterId = renterIdField.getText();
+            
 
+            // Simulates adding rental to the database (placeholder)
+            Rental rental = new Rental(itemName, startDate, endDate, renterId, "Electric Boogalo");
 
-            JOptionPane.showMessageDialog(panel, "Rental Added Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Add rental to placeholder for database
+            DatabaseHelper.addRental(rental);
+
+            JOptionPane.showMessageDialog(frame, "Rental Added Successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        return panel;
-    }
+        // Manage Users Page
+        JPanel manageUsersPanel = new JPanel();
+        manageUsersPanel.setLayout(new GridLayout(4, 1, 10, 20));
 
-    private static JPanel createViewRentalsPanel() {
-        JPanel panel = new JPanel();
-        JButton viewRentalsButton = new JButton("Show All Rentals");
-
-        viewRentalsButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(panel, "Rental Report goes here", "Rental Report", JOptionPane.INFORMATION_MESSAGE);
-        });
-
-        panel.add(viewRentalsButton);
-        return panel;
-    }
-
-    private static JPanel createManageUsersPanel() {
-        // Manage Users Panel
-        JPanel panel = new JPanel();
         JButton addUserButton = new JButton("Add User");
         JButton deleteUserButton = new JButton("Delete User");
         JButton viewUsersButton = new JButton("View Users");
+        
+        
+        
+        //Display Rentals 
+        
+         RentalSearchByItemIDPanel displayRentalPanel = new RentalSearchByItemIDPanel();
 
+        
+        
+
+     
+        setButtonStyle(addUserButton);
+        setButtonStyle(deleteUserButton);
+        setButtonStyle(viewUsersButton);
+        
+
+        manageUsersPanel.add(addUserButton);
+        manageUsersPanel.add(deleteUserButton);
+        manageUsersPanel.add(viewUsersButton);
+
+        //ActionListener for Manage Users Buttons
         addUserButton.addActionListener(e -> {
-            String newUser = JOptionPane.showInputDialog(panel, "Enter username:");
-            JOptionPane.showMessageDialog(panel, "User Added: " + newUser, "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Simulates adding a new user 
+            String newUser = JOptionPane.showInputDialog(frame, "Enter username:");
+            DatabaseHelper.validateUser(newUser, "dummyPassword"); // (Placeholder)
+            JOptionPane.showMessageDialog(frame, "User Added: " + newUser, "Success", JOptionPane.INFORMATION_MESSAGE);
         });
 
         deleteUserButton.addActionListener(e -> {
-            String userToDelete = JOptionPane.showInputDialog(panel, "Enter username to delete:");
-            JOptionPane.showMessageDialog(panel, "User Deleted: " + userToDelete, "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Simulates deleting a user (placeholder )
+            String userToDelete = JOptionPane.showInputDialog(frame, "Enter username to delete:");
+            JOptionPane.showMessageDialog(frame, "User Deleted: " + userToDelete, "Success", JOptionPane.INFORMATION_MESSAGE);
         });
 
         viewUsersButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(panel, "View Users functionality", "Info", JOptionPane.INFORMATION_MESSAGE);
+            // Simulates viewing users (placeholder )
+            JOptionPane.showMessageDialog(frame, "View Users functionality", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        panel.add(addUserButton);
-        panel.add(deleteUserButton);
-        panel.add(viewUsersButton);
-        return panel;
+        
+        mainContentPanel.add(addRentalPanel, "Add Rental");
+        mainContentPanel.add(manageUsersPanel, "Manage Users");
+        mainContentPanel.add(displayRentalPanel, "View Rentals");
+        AvailableRentalsPanel availableRentalsPanel = new AvailableRentalsPanel();
+        mainContentPanel.add(availableRentalsPanel, "Available Rentals");
+
+        // ActionListeners for Navigation Buttons
+        addRentalButton.addActionListener(e -> switchPage(mainContentPanel, "Add Rental"));
+        manageUsersButton.addActionListener(e -> switchPage(mainContentPanel, "Manage Users"));
+        viewRentalButton.addActionListener(e -> switchPage(mainContentPanel, "View Rentals"));
+        viewAvailableButton.addActionListener(e -> switchPage(mainContentPanel, "Available Rentals"));
+
+
+        // Add Components to the Frame
+        frame.add(topNavPanel, BorderLayout.NORTH); 
+        frame.add(mainContentPanel, BorderLayout.CENTER);  
+        
+        
+        //View users 
+        
+        
+        
+        
+        
+ 
+        
+        
+        
+        
+
+        frame.setVisible(true);
+    }
+
+   
+    private static void setButtonStyle(JButton button) {
+        button.setBackground(new Color(60, 60, 60));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    }
+
+    private static void switchPage(JPanel panel, String pageName) {
+        CardLayout cl = (CardLayout)(panel.getLayout());
+        cl.show(panel, pageName);  
     }
 }
